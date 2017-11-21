@@ -365,9 +365,11 @@ public class RNGoogleSignInModule extends ReactContextBaseJavaModule implements 
     }
 
     private void setAccessToken(String accessToken) {
-        params.putString("accessToken", accessToken);
-        sendEvent("RNGoogleSignInSuccess", params);
-        params = null;
+        if (params != null) {
+            params.putString("accessToken", accessToken);
+            sendEvent("RNGoogleSignInSuccess", params);
+            params = null;
+        }
     }
 
     @ReactMethod
