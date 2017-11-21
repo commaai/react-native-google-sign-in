@@ -7,7 +7,7 @@ For LinkedIn SDK, check out [joonhocho/react-native-linkedin-sdk](https://github
 
 ## Getting started
 
-See [Tested Environments](#tested-environments).
+Tested with React Native 0.39 and 0.40. Also, see [Tested Environments](#tested-environments).
 Let me know if some instructions are missing.
 
 `$ react-native install react-native-google-sign-in`
@@ -37,7 +37,9 @@ dependencies {
  - Modify your `{YourApp}/android/app/build.gradle`:
 ```
 dependencies {
-    compile project(':react-native-google-sign-in') // Should be added automatically by react-native link.
+    compile(project(":react-native-google-sign-in")) { // ADD this
+        exclude group: "com.google.android.gms"
+    } 
     ...your modules...
     compile "com.google.android.gms:play-services-auth:10.0.1" // Add this, not 9.8.0 (from instructions).
     compile "com.facebook.react:react-native:+"
@@ -124,6 +126,14 @@ Add to your Swift Bridging Header, `{YourApp}/ios/{YourApp}-Bridging-Header.h`:
 #import <Google/SignIn.h>
 ```
 
+Or, if you are using RN <= 0.39:
+```
+#import "RCTBridgeModule.h"
+#import "RCTViewManager.h"
+#import "RCTEventEmitter.h"
+#import <Google/SignIn.h>
+```
+
 
 
 ## Usage
@@ -186,6 +196,10 @@ async yourMethod() {
   console.log(user);
 }
 ```
+
+See [js/GoogleSignIn.ios.js](https://github.com/joonhocho/react-native-google-sign-in/blob/master/js/GoogleSignIn.ios.js) for supported iOS APIs.
+
+See [js/GoogleSignIn.android.js](https://github.com/joonhocho/react-native-google-sign-in/blob/master/js/GoogleSignIn.android.js) for supported Android APIs.
 
 
 ## Tested Environments
