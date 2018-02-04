@@ -47,6 +47,8 @@ public class RNGoogleSignInModule extends ReactContextBaseJavaModule implements 
     private static final String ERROR_MESSAGE_NULL_API_CLIENT = "Must call configure first";
     private static final int ERROR_CODE_NOT_CONNECTED_API_CLIENT = 20002;
     private static final String ERROR_MESSAGE_NOT_CONNECTED_API_CLIENT = "API Client Not Connected";
+    private static final int ERROR_CODE_NO_SIGN_IN_RESULT = 20003;
+    private static final String ERROR_MESSAGE_NO_SIGN_IN_RESULT = "No sign in result provided. Ensure play services is installed";
 
     private GoogleApiClient mGoogleApiClient = null;
     private WritableMap params = null;
@@ -191,7 +193,11 @@ public class RNGoogleSignInModule extends ReactContextBaseJavaModule implements 
     public void onActivityResult(Activity activity, final int requestCode, final int resultCode, final Intent intent) {
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(intent);
-            handleSignInResult(result);
+            if (result != null) {
+                handleSignInResult(result);
+            } else {
+                sendError("RNGoogleSignInError", ERROR_CODE_NO_SIGN_IN_RESULT, ERROR_MESSAGE_NO_SIGN_IN_RESULT);
+            }
         }
     }
 
@@ -304,7 +310,7 @@ public class RNGoogleSignInModule extends ReactContextBaseJavaModule implements 
         }
     }
 
-    private void handleSignInResult(GoogleSignInResult result) {
+    private void handleSignInResult(@NonNull GoogleSignInResult result) {
         log("handle sign in");
         if (result.isSuccess()) {
             log("sign in success");
